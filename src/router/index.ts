@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/authStore'
 import LoginView from '@/views/LoginView.vue'
 import MemberHome from '@/views/MemberHome.vue'
 import TripView from '@/views/TripView.vue'
+import RegisterView from '@/views/RegisterView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -13,6 +14,13 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+      meta: { guestOnly: true }, // 👈 未登入才能看
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView,
+      meta: { guestOnly: true }, // 👈 未登入才能看
     },
     {
       path: '/member',
@@ -41,7 +49,7 @@ router.beforeEach((to) => {
   const auth = useAuthStore()
 
   // 已登入卻還想進 login，直接送去會員頁
-  if (to.name === 'login' && auth.isLogin) {
+  if (to.meta.guestOnly && auth.isLogin) {
     return { name: 'member' }
   }
 

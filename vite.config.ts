@@ -12,6 +12,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
+      '/render_api': {
+        target: 'https://java-app-be4a.onrender.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/render_api/, ''),
+      },
     },
   },
   resolve: {
