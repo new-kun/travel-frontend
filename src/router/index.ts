@@ -6,6 +6,8 @@ import LoginView from '@/views/LoginView.vue'
 import MemberHome from '@/views/MemberHome.vue'
 import TripView from '@/views/TripView.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import SetupTravelPlaneView from '@/views/SetupTravelPlaneView.vue'
+import InitTripView from '@/views/InitTripView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -35,9 +37,21 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/:pathMatch(.*)*',
-      redirect: '/login',
+      path: '/setupTrip',
+      name: 'setupTrip',
+      component: SetupTravelPlaneView,
+      meta: { requiresAuth: true },
     },
+    {
+      path: '/initTrip',
+      name: 'initTrip',
+      component: InitTripView,
+      meta: { requiresAuth: true },
+    },
+    // {
+    //   path: '/:pathMatch(.*)*',
+    //   redirect: '/login',
+    // },
   ],
 })
 
@@ -45,23 +59,23 @@ const router = createRouter({
  * 🔐 全域路由守衛
  * 沒有會員資料 → 導向登入頁
  */
-router.beforeEach((to) => {
-  const auth = useAuthStore()
+// router.beforeEach((to) => {
+//   const auth = useAuthStore()
 
-  // 已登入卻還想進 login，直接送去會員頁
-  if (to.meta.guestOnly && auth.isLogin) {
-    return { name: 'member' }
-  }
+//   // 已登入卻還想進 login，直接送去會員頁
+//   if (to.meta.guestOnly && auth.isLogin) {
+//     return { name: 'member' }
+//   }
 
-  // 需要登入但尚未登入 → 導回登入頁
-  if (to.meta.requiresAuth && !auth.isLogin) {
-    return {
-      name: 'login',
-      query: { redirect: to.fullPath }, // optional：登入後導回
-    }
-  }
+//   // 需要登入但尚未登入 → 導回登入頁
+//   if (to.meta.requiresAuth && !auth.isLogin) {
+//     return {
+//       name: 'login',
+//       query: { redirect: to.fullPath }, // optional：登入後導回
+//     }
+//   }
 
-  return true
-})
+//   return true
+// })
 
 export default router

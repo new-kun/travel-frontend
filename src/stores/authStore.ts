@@ -1,25 +1,24 @@
+import type { AuthUser } from "@/types/auth-type";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 export const useAuthStore = defineStore("auth", () => {
-    const id = ref<number | undefined>(undefined);
-    const phone = ref<string | undefined>(undefined);
-    const userName = ref<string | undefined>(undefined);
+    const user = ref<AuthUser>({})
 
-    const isLogin = computed(() => id.value !== undefined);
+    const isLogin = computed(() => user.value.id !== undefined);
 
     function login(memberId: number| undefined, phoneNo: string, name: string) {
-        id.value = memberId;
-        phone.value = phoneNo;
-        userName.value = name;
+        user.value = {
+      id: memberId,
+      phone: phoneNo,
+      userName: name,
+    }
     }
 
     function logout() {
-        id.value = undefined;
-        phone.value = undefined;
-        userName.value = undefined;
+        user.value = {};
     }
 
-    return { id, phone, userName, login, logout, isLogin };
+    return { user, login, logout, isLogin };
 
 })

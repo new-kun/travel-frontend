@@ -1,36 +1,13 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
-  <div>
-    <router-view></router-view>
+  <div
+    class="text-slate-700 h-screen flex flex-col overflow-hidden bg-slate-100"
+  >
+    <div
+      class="flex flex-col h-full max-w-md mx-auto w-full bg-white shadow-2xl relative sm:rounded-xl sm:my-4 sm:h-[95vh] sm:border-4 sm:border-slate-100"
+    >
+      <RouterView />
+    </div>
   </div>
 </template>
 
-<style>
-        body { font-family: 'Noto Sans TC', 'Noto Sans JP', sans-serif; background-color: #314a7c; }
-        .hide-scroll::-webkit-scrollbar { display: none; }
-        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
-        .fade-enter-from, .fade-leave-to { opacity: 0; }
-        #map-container { z-index: 1; }
-        .gps-pulse {
-            width: 14px; height: 14px; border: 2px solid #fff; border-radius: 50%;
-            background-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4);
-            animation: pulse-blue 2s infinite;
-        }
-        @keyframes pulse-blue {
-            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-        }
-        .leaflet-popup-content-wrapper { border-radius: 12px; padding: 0; overflow: hidden; }
-        .leaflet-popup-content { margin: 0; width: 200px !important; }
-        @keyframes fade-in-up {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in { animation: fade-in-up 0.4s ease-out forwards; }
-        
-    </style>
+<script setup lang="ts"></script>
