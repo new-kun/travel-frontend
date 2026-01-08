@@ -8,6 +8,8 @@ import TripView from '@/views/TripView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import SetupTravelPlaneView from '@/views/SetupTravelPlaneView.vue'
 import InitTripView from '@/views/InitTripView.vue'
+import AirPlanInfo from '@/components/AirPlanInfo.vue'
+import TestTripView from '@/views/TestTripView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -46,6 +48,12 @@ const router = createRouter({
       path: '/initTrip',
       name: 'initTrip',
       component: InitTripView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: TestTripView,
       meta: { requiresAuth: true },
     },
     // {

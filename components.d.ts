@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AirPlanInfo: typeof import('./src/components/AirPlanInfo.vue')['default']
     DaySelector: typeof import('./src/components/DaySelector.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
@@ -20,7 +21,9 @@ declare module 'vue' {
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
+    ElOption: typeof import('element-plus/es')['ElOption']
     ElRow: typeof import('element-plus/es')['ElRow']
+    ElSelect: typeof import('element-plus/es')['ElSelect']
     PlanItem: typeof import('./src/components/PlanItem.vue')['default']
     PlanList: typeof import('./src/components/PlanList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

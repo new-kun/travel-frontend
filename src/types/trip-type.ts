@@ -20,3 +20,13 @@ export interface DayPlan {
   items: TripItem[]
   flight: any | null
 }
+
+
+
+export interface TripModel {
+  arrDate: string[]
+  airPlanDateTimeRange: Date[]
+  airPlanStartPlace: string
+  airPlanTargetPlace: string
+  airPlaneTargetSelect: string
+}
