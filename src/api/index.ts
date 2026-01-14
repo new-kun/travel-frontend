@@ -26,3 +26,9 @@ export const fetchTripDays = async (tripId: number): Promise<DayPlan[]> => {
   });
   return res.data;
 };
+
+/** 取得匯率 */
+export const getRateApi = async (currency: string) => {
+  const res = await http.post("/api/public/getRate", { currency: currency });
+  return res.data;
+};

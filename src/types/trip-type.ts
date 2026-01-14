@@ -31,7 +31,7 @@ export interface TripModel {
   airPlaneTargetSelect: string;
 }
 
-export interface initTripForm {
+export interface InitTripForm {
   //會員電話
   userPhone: string;
   //會員暱稱
@@ -44,4 +44,11 @@ export interface initTripForm {
   offsetDays: number;
   // 匯率
   rate: number;
+  // 幣別
+  currency: string;
+}
+
+export interface RateForm {
+  //幣別
+  currency: string;
 }

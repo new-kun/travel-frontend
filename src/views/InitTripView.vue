@@ -39,15 +39,20 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="匯率" props="rate">
-            <el-input-number
-              v-model="form.rate"
-              :precision="3"
-              :step="0.001"
-              :max="1000"
+      <el-row :gutter="16">
+        <el-col :span="10">
+          <el-form-item label="兌換幣別">
+            <el-select
+              placeholder="選擇幣別"
+              v-model="form.currency"
+              :options="options"
+              @change="getRate"
             />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="今日匯率" props="rate">
+            <el-input v-model.number="form.rate" disabled />
           </el-form-item>
         </el-col>
       </el-row>
@@ -63,33 +68,51 @@
 </template>
 
 <script lang="ts" setup>
+import { getRateApi } from "@/api";
 import { useAuthStore } from "@/stores/authStore";
-import dayjs, { Dayjs } from "dayjs";
+import type { InitTripForm } from "@/types/trip-type";
+import dayjs from "dayjs";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
-interface initTripForm {
-  userPhone: string;
-  userName: string;
-  destination: string;
-  startDate: Dayjs;
-  offsetDays: number;
-  rate: number;
-}
 const size = ref<"default" | "large" | "small">("default");
 
 const centerDialogVisible = ref(false);
 const auth = useAuthStore();
 const router = useRouter();
 
-const form = reactive<initTripForm>({
+const form = reactive<InitTripForm>({
   userPhone: auth.user.phone ?? "",
   userName: auth.user.userName ?? "",
   destination: "日本",
   startDate: dayjs(),
   offsetDays: 3,
   rate: 0.215,
+  currency: "",
 });
+
+const options = [
+  {
+    value: "JPY",
+    label: "日圓",
+  },
+  {
+    value: "USD",
+    label: "美金",
+  },
+  {
+    value: "KRW",
+    label: "韓元",
+  },
+  {
+    value: "MYR",
+    label: "馬來幣",
+  },
+  {
+    value: "CNY",
+    label: "人民幣",
+  },
+];
 
 const confirm = () => {
   //新增旅行計畫API
@@ -100,5 +123,9 @@ const confirm = () => {
 const cancelTrip = () => {
   centerDialogVisible.value = false;
   router.back();
+};
+const getRate = async () => {
+  const res = await getRateApi(form.currency);
+  form.rate = res.data;
 };
 </script>
