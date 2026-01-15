@@ -26,7 +26,8 @@
             <el-date-picker
               v-model="form.startDate"
               type="date"
-              placeholder="Pick a day"
+              placeholder="YYYY-MM-DD"
+              format="YYYY-MM-DD"
               :size="size"
             />
           </el-form-item>
@@ -68,7 +69,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getRateApi } from "@/api";
+import { getRateApi, initTrip } from "@/api";
 import { useAuthStore } from "@/stores/authStore";
 import type { InitTripForm } from "@/types/trip-type";
 import dayjs from "dayjs";
@@ -85,9 +86,9 @@ const form = reactive<InitTripForm>({
   userPhone: auth.user.phone ?? "",
   userName: auth.user.userName ?? "",
   destination: "日本",
-  startDate: dayjs(),
+  startDate: dayjs().format("YYYY-MM-DD"),
   offsetDays: 3,
-  rate: 0.215,
+  rate: 0,
   currency: "",
 });
 
@@ -114,8 +115,11 @@ const options = [
   },
 ];
 
-const confirm = () => {
+const confirm = async () => {
   //新增旅行計畫API
+  console.log("確認form" + JSON.stringify(form));
+  const result = await initTrip(form);
+  console.log("回傳結果" + JSON.stringify(result));
   centerDialogVisible.value = false;
   router.push("trip");
 };

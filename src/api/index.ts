@@ -1,7 +1,7 @@
 import http from "@/utils/http";
 import type MemberForm from "@/types/member-form";
 import type { MemberResponse } from "@/types/member-reponse";
-import type { DayPlan, TripSetup } from "@/types/trip-type";
+import type { DayPlan, InitTripForm, TripSetup } from "@/types/trip-type";
 
 export const register = async (value: MemberForm): Promise<MemberResponse> => {
   const res = await http.post<MemberResponse>("/member/register", value);
@@ -14,8 +14,8 @@ export const login = async (phone: string): Promise<MemberResponse> => {
 };
 
 /** 建立旅程 */
-export const createTrip = async (setup: TripSetup) => {
-  const res = await http.post("/trip/create", setup);
+export const initTrip = async (initTripForm: InitTripForm) => {
+  const res = await http.post("/api/trip/init", initTripForm);
   return res.data;
 };
 

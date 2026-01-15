@@ -39,7 +39,7 @@ export interface InitTripForm {
   //目的地
   destination: string;
   // 開始日期
-  startDate: Dayjs;
+  startDate: string;
   // 幾天
   offsetDays: number;
   // 匯率
