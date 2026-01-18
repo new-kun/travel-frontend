@@ -52,3 +52,39 @@ export interface RateForm {
   //幣別
   currency: string;
 }
+
+export interface TripForm {
+  // 旅行計畫編號
+  id: number;
+  // 會員編號
+  memberId: number;
+  // 會員電話
+  userPhone: string;
+  // 會員暱稱
+  userName: string;
+  // 目的地
+  destination: string;
+  // 旅行日期
+  tripDate: Dayjs;
+  // 匯率
+  rate: number;
+}
+
+export interface TripDetailForm {
+  //旅遊細節編號
+  id: number;
+  //活動開始時間
+  startTime: string;
+  //活動類型
+  activityType: string;
+  //活動主題
+  activityTitle: string;
+  //活動地點
+  activityPlace: string;
+  //活動備註
+  activityMemo: string;
+  //旅遊日期
+  tripDetailDate: string;
+  //會員電話
+  userPhone: string;
+}

@@ -1,71 +1,64 @@
 <template>
-  <el-button plain @click="centerDialogVisible = true"> 開啟彈窗 </el-button>
+  <el-form :model="form">
+    <el-row>
+      <el-col>
+        <el-form-item label="目的地(英文/中文)">
+          <el-input
+            v-model="form.destination"
+            maxlength="20"
+            placeholder="日本、Osaka"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row justify="center" :gutter="16">
+      <!-- 1/3 -->
+      <el-col :span="16">
+        <el-form-item label="開始日期" prop="startDate">
+          <el-date-picker
+            v-model="form.startDate"
+            type="date"
+            placeholder="YYYY-MM-DD"
+            format="YYYY-MM-DD"
+            :size="size"
+          />
+        </el-form-item>
+      </el-col>
 
-  <el-dialog
-    v-model="centerDialogVisible"
-    title="旅行計畫"
-    width="500"
-    align-center
-  >
-    <el-form :model="form">
-      <el-row>
-        <el-col>
-          <el-form-item label="目的地(英文/中文)">
-            <el-input
-              v-model="form.destination"
-              maxlength="20"
-              placeholder="日本、Osaka"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="16">
-        <!-- 1/3 -->
-        <el-col :span="16">
-          <el-form-item label="開始日期" prop="startDate">
-            <el-date-picker
-              v-model="form.startDate"
-              type="date"
-              placeholder="YYYY-MM-DD"
-              format="YYYY-MM-DD"
-              :size="size"
-            />
-          </el-form-item>
-        </el-col>
-
-        <!-- 2/3 -->
-        <el-col :span="8">
-          <el-form-item label="天數" prop="offsetDays">
-            <el-input-number v-model="form.offsetDays" :min="1" :max="10" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="16">
-        <el-col :span="10">
-          <el-form-item label="兌換幣別">
-            <el-select
-              placeholder="選擇幣別"
-              v-model="form.currency"
-              :options="options"
-              @change="getRate"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="今日匯率" props="rate">
-            <el-input v-model.number="form.rate" disabled />
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
-
-    <template #footer>
-      <div class="dialog-footer">
+      <!-- 2/3 -->
+      <el-col :span="8">
+        <el-form-item label="天數" prop="offsetDays">
+          <el-input-number v-model="form.offsetDays" :min="1" :max="10" />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row justify="center" :gutter="16">
+      <el-col :span="10">
+        <el-form-item label="兌換幣別">
+          <el-select
+            placeholder="選擇幣別"
+            v-model="form.currency"
+            :options="options"
+            @change="getRate"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="今日匯率" props="rate">
+          <el-input v-model.number="form.rate" disabled />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row justify="center" :gutter="16">
+      <el-col :span="6">
         <el-button @click="cancelTrip">返回</el-button>
+      </el-col>
+
+      <el-col :span="6">
         <el-button type="primary" @click="confirm"> 開始規劃 </el-button>
-      </div>
-    </template>
-  </el-dialog>
+      </el-col>
+    </el-row>
+  </el-form>
 </template>
 
 <script lang="ts" setup>
@@ -77,8 +70,6 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 const size = ref<"default" | "large" | "small">("default");
-
-const centerDialogVisible = ref(false);
 const auth = useAuthStore();
 const router = useRouter();
 
@@ -120,12 +111,10 @@ const confirm = async () => {
   console.log("確認form" + JSON.stringify(form));
   const result = await initTrip(form);
   console.log("回傳結果" + JSON.stringify(result));
-  centerDialogVisible.value = false;
   router.push("trip");
 };
 
 const cancelTrip = () => {
-  centerDialogVisible.value = false;
   router.back();
 };
 const getRate = async () => {

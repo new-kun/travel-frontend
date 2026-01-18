@@ -1,59 +1,66 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/authStore'
+import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "@/stores/authStore";
 
 // views
-import LoginView from '@/views/LoginView.vue'
-import MemberHome from '@/views/MemberHome.vue'
-import TripView from '@/views/TripView.vue'
-import RegisterView from '@/views/RegisterView.vue'
-import SetupTravelPlaneView from '@/views/SetupTravelPlaneView.vue'
-import InitTripView from '@/views/InitTripView.vue'
-import AirPlanInfo from '@/components/AirPlanInfo.vue'
-import TestTripView from '@/views/TestTripView.vue'
+import LoginView from "@/views/LoginView.vue";
+import MemberHome from "@/views/MemberHome.vue";
+import TripView from "@/views/TripView.vue";
+import RegisterView from "@/views/RegisterView.vue";
+import SetupTravelPlaneView from "@/views/SetupTravelPlaneView.vue";
+import InitTripView from "@/views/InitTripView.vue";
+import AirPlanInfo from "@/components/AirPlanInfo.vue";
+import TestTripView from "@/views/TestTripView.vue";
+import Doshboard from "@/views/Doshboard.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/login',
-      name: 'login',
+      path: "/login",
+      name: "login",
       component: LoginView,
       meta: { guestOnly: true }, // 👈 未登入才能看
     },
     {
-      path: '/register',
-      name: 'register',
+      path: "/register",
+      name: "register",
       component: RegisterView,
       meta: { guestOnly: true }, // 👈 未登入才能看
     },
     {
-      path: '/member',
-      name: 'member',
+      path: "/member",
+      name: "member",
       component: MemberHome,
       meta: { requiresAuth: true },
     },
     {
-      path: '/trip',
-      name: 'trip',
+      path: "/trip",
+      name: "trip",
       component: TripView,
       meta: { requiresAuth: true },
     },
     {
-      path: '/setupTrip',
-      name: 'setupTrip',
+      path: "/setupTrip",
+      name: "setupTrip",
       component: SetupTravelPlaneView,
       meta: { requiresAuth: true },
     },
     {
-      path: '/initTrip',
-      name: 'initTrip',
+      path: "/initTrip",
+      name: "initTrip",
       component: InitTripView,
       meta: { requiresAuth: true },
     },
     {
-      path: '/test',
-      name: 'test',
-      component: TestTripView,
+      path: "/doshboard",
+      name: "doshboard",
+      component: Doshboard,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/test",
+      name: "test",
+      component: Doshboard,
       meta: { requiresAuth: true },
     },
     // {
@@ -61,7 +68,7 @@ const router = createRouter({
     //   redirect: '/login',
     // },
   ],
-})
+});
 
 /**
  * 🔐 全域路由守衛
@@ -86,4 +93,4 @@ const router = createRouter({
 //   return true
 // })
 
-export default router
+export default router;

@@ -1,7 +1,7 @@
 import http from "@/utils/http";
 import type MemberForm from "@/types/member-form";
 import type { MemberResponse } from "@/types/member-reponse";
-import type { DayPlan, InitTripForm, TripSetup } from "@/types/trip-type";
+import type { InitTripForm, TripDetailForm } from "@/types/trip-type";
 
 export const register = async (value: MemberForm): Promise<MemberResponse> => {
   const res = await http.post<MemberResponse>("/member/register", value);
@@ -19,16 +19,21 @@ export const initTrip = async (initTripForm: InitTripForm) => {
   return res.data;
 };
 
-/** 取得旅程天數（使用 POST） */
-export const fetchTripDays = async (tripId: number): Promise<DayPlan[]> => {
-  const res = await http.post<DayPlan[]>("/trip/days", {
-    tripId,
-  });
+/** 取得最新的旅遊資訊 */
+export const getLastTrip = async (userPhone: string) => {
+  const res = await http.post("/api/trip/getLastTrip", { userPhone });
   return res.data;
 };
 
 /** 取得匯率 */
 export const getRateApi = async (currency: string) => {
   const res = await http.post("/api/public/getRate", { currency: currency });
+  return res.data;
+};
+
+/** 更新旅遊細節 */
+export const updateTripDetail = async (form: TripDetailForm) => {
+  const res = await http.post("/api/trip/updateTripDetail", form);
+  console.log("回傳資料" + JSON.stringify(res));
   return res.data;
 };
