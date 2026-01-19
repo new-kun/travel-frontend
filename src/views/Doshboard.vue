@@ -5,7 +5,12 @@
       <!-- 旅遊期程 -->
       <el-row :gutter="16">
         <el-col>
-          <el-radio-group v-model="tripDate" size="large" fill="#409eff">
+          <el-radio-group
+            v-model="tripDate"
+            size="large"
+            fill="#409eff"
+            @change="getTripDtl"
+          >
             <el-radio-button
               v-for="(date, index) in tripDateList"
               :key="index"
@@ -82,36 +87,66 @@
           </el-col>
         </el-row>
         <el-row :gutter="16" justify="center">
-          <el-col :span="4" :offset="4">
+          <el-col :span="4" :offset="2">
             <el-form-item>
               <el-button @click="resetInfo(dtlFormRef)">清空</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="4" :offset="4">
+          <el-col :span="4" :offset="2">
             <el-form-item>
               <el-button type="primary" @click="updateTripDtl">新增</el-button>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-      <!--  -->
+      <!-- todo 航班 -->
+      <template v-if="!isShow">
+        <el-row :gutter="16">
+          <el-col :span="24" style="text-align: center">
+            <el-button type="success" :icon="Promotion">新增航班</el-button>
+          </el-col>
+        </el-row>
+      </template>
+
+      <!-- 日程表 -->
       <el-timeline>
-        <el-timeline-item timestamp="2018/4/12" placement="top">
-          <el-card>
-            <h4>Update Github template</h4>
-            <p>Tom committed 2018/4/12 20:46</p>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2018/4/3" placement="top">
-          <el-card>
-            <h4>Update Github template</h4>
-            <p>Tom committed 2018/4/3 20:46</p>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2018/4/2" placement="top">
-          <el-card>
-            <h4>Update Github template</h4>
-            <p>Tom committed 2018/4/2 20:46</p>
+        <el-timeline-item
+          center
+          v-for="(item, index) in timetableRef"
+          :key="index"
+          :timestamp="item.startTime"
+          placement="top"
+        >
+          <el-card shadow="hover">
+            <el-space
+              direction="vertical"
+              alignment="center"
+              style="width: 100%"
+            >
+              <h4>{{ `${item.activityType} : ${item.activityTitle}` }}</h4>
+
+              <div>
+                <el-input v-model="item.activityPlace">
+                  <template #append>
+                    <el-button
+                      type="primary"
+                      tag="a"
+                      :href="`https://www.google.com/maps/search/${encodeURIComponent(item.activityPlace)}`"
+                      target="_blank"
+                      :icon="MapLocation"
+                    />
+                  </template>
+                </el-input>
+              </div>
+
+              <div>
+                <el-input
+                  v-model="item.activityMemo"
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 4 }"
+                ></el-input>
+              </div>
+            </el-space>
           </el-card>
         </el-timeline-item>
       </el-timeline>
@@ -194,18 +229,30 @@
 
 <script lang="ts" setup>
 import type { FormInstance, TabsPaneContext } from "element-plus";
-import { getLastTrip, getRateApi, initTrip, updateTripDetail } from "@/api";
+import {
+  getLastTrip,
+  getRateApi,
+  getTripDetailList,
+  initTrip,
+  updateTripDetail,
+} from "@/api";
 import { useAuthStore } from "@/stores/authStore";
-import type { TripDetailForm, InitTripForm, TripForm } from "@/types/trip-type";
-import dayjs, { Dayjs } from "dayjs";
-import { computed, onMounted, reactive, ref } from "vue";
-import { MapLocation } from "@element-plus/icons-vue";
+import type {
+  TripDetailForm,
+  InitTripForm,
+  TripForm,
+  TripModel,
+} from "@/types/trip-type";
+import dayjs from "dayjs";
+import { computed, onMounted, reactive, ref, watch } from "vue";
+import { MapLocation, Promotion } from "@element-plus/icons-vue";
 
 //現在時間
 const dtlFormRef = ref<FormInstance>();
 // 預設頁籤
 const activeName = ref("trip");
-
+//顯示航班
+const isShow = ref(false);
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event);
 };
@@ -313,24 +360,54 @@ const getRate = async () => {
 };
 const tripList = ref<TripForm[]>([]);
 
-const tripDateList = computed(() => {
-  return tripList.value.map((item) => item.tripDate);
-});
+const tripDateList = computed(() =>
+  tripList.value.map((item) => dayjs(item.tripDate).format("YYYY-MM-DD")),
+);
 
 const updateTripDtl = async () => {
   console.log("確認tripDate" + tripDate.value);
   tripDetailForm.value.tripDetailDate = tripDate.value ?? "";
   console.log("打API" + JSON.stringify(tripDetailForm.value));
   await updateTripDetail(tripDetailForm.value);
+  //重新刷新資料
+  await getTripDtl();
 };
+//旅遊時刻表
+const timetableRef = ref<TripDetailForm[]>([]);
+
+//取得行程表資料
+const getTripDtl = async () => {
+  const res = await getTripDetailList("0975872879", tripDate.value);
+  // console.log("確認賦值前" + JSON.stringify(timetableRef.value));
+  timetableRef.value = res.data;
+  // console.log("確認賦值後" + JSON.stringify(timetableRef.value));
+};
+
+watch(
+  tripList,
+  (list) => {
+    if (!list.length) return;
+    const first = list[0];
+    if (!first) return;
+    // ⭐ 預設第一筆
+    tripDate.value = dayjs(first.tripDate).format("YYYY-MM-DD");
+
+    // ⭐ 同時載入該日行程
+    getTripDtl();
+  },
+  { immediate: true },
+);
 
 // 初始化資料
 onMounted(async () => {
-  //取得使用者最新的旅遊計畫
   const res = await getLastTrip("0975872879");
-  // console.log("確認回傳資訊" + JSON.stringify(res));
-  tripList.value = res.data;
-  // console.log("確認assign資訊" + JSON.stringify(tripList.value));
+
+  tripList.value = res.data.map((item: any) => ({
+    ...item,
+    tripDate: dayjs(item.tripDate), // ⭐ 關鍵轉型
+  }));
+  // tripDate.value = tripList.value[0]?.tripDate.format("YYYY-MM-DD") ?? "";
+  // console.log("我需要被選擇 =" + tripDate.value);
 });
 </script>
 

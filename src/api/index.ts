@@ -34,6 +34,19 @@ export const getRateApi = async (currency: string) => {
 /** 更新旅遊細節 */
 export const updateTripDetail = async (form: TripDetailForm) => {
   const res = await http.post("/api/trip/updateTripDetail", form);
-  console.log("回傳資料" + JSON.stringify(res));
+  // console.log("回傳資料" + JSON.stringify(res));
+  return res.data;
+};
+
+/** 取得當日行程 */
+export const getTripDetailList = async (
+  userPhone: string,
+  tripDate: string,
+) => {
+  const res = await http.post("/api/trip/getTripDetailList", {
+    userPhone: userPhone,
+    tripDate: tripDate,
+  });
+  // console.log("回傳資料" + JSON.stringify(res));
   return res.data;
 };

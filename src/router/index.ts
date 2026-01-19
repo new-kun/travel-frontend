@@ -60,7 +60,7 @@ const router = createRouter({
     {
       path: "/test",
       name: "test",
-      component: Doshboard,
+      component: TestTripView,
       meta: { requiresAuth: true },
     },
     // {
